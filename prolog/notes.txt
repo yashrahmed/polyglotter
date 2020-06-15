@@ -1,0 +1,27 @@
+Chapter 1 - Tutorial and Introductory notes.
+
+1. Prolog uses a 'descriptive' rather than a prescriptive approach to programming.
+2. In a Prolog program, relevant objects and the relationships between them are specified in a "fact table".
+3. The basic constructs in Prolog are
+    a. Facts - e.g. likes(john, milk). --> can be read as john likes milk. Interpretation decided by programmers.
+    b. Variable - any name beginning with an upper case letter is a variable. Variable can be instantiated (i.e. an object exists that can be substituted in its place) or not.
+    c. Rules.
+    d. Queries - are statements that prolog engine can answer. 
+        -> Answers can be variable values.
+        -> Or answer can be a 'yes' or 'no'. 
+            A 'yes' implies that the given query can be proven given the facts (Prolog terminology calls this unifying with the question).
+            A 'no' implies the opposite. Note that 'no' does NOT imply false, just that the query cannot be proved.
+         
+
+    e. Literals - similar to literals in other languages (values must start with lowercase letters/numbers or they could numbers).
+4. Conjunctions in Prolog are written as fact1/rule1 , fact2/rule2, ......
+5. When a sequence of goals are given to Prolog as a conjunction (Rules), then it attempts to satisfy each of them separately.
+   When the sequence of goals contains variables, then Prolog attempts to satisfy them via unfication in the "LEFT to RIGHT" direction.
+   If a goal cannot be satified somewhere in a sequence then Prolog backtracks and attempts to re-satisfy the previous goal again. This behavior is called Backtracking.
+   For efficiency reason, prolog maintains the positon in the list of facts that was used to satisfy the previous goal, as this enables ->
+    a. Resume scanning the list in case the previous goal has to be resatisfied again.
+    b. It can be used to 'forget' the fact that was use to instantiate the variable when the goal needs to be resatisfied.
+6. When goals are provided in a sequence, a variable is instantiated after unification with a certain goal in a sequence with the SAME literal in ALL goals. 
+
+ 
+Chapter 2 - Syntaxes, Arithmetic, Operators and Goal Satisfaction. 

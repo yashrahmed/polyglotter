@@ -1,0 +1,65 @@
+HASKELL NOTES - 
+
+Using "stack" manager to install and manage haskell installations.
+
+Please note that these notes sometimes use terminology from imperative programming.
+This may lead to mis-representation of the concepts metioned herein. An effort has been
+made to stick as close to functional programming paralance as possible.
+
+Chapter 01 ---
+
+-----Basics
+1. Negative numbers are cannot simply be used in arithmetic operations e.g. 5 * -2. Instead () need to be used in haskell expressions. This 
+   is because the interpreter gets confused b/w infix and prefix notation.
+3. Expressions like 99 > 100 == True are problematic for the same reason. Correct way to use it is (99 > 100) == True.
+3. Haskell is strongly typed.
+4. Characters literals are written using '' and String using "".
+5. In GHCI the 'let' keyword is used to define (not create) a variable. e.g. let a = 2.
+   This is equivalent to doing a = 1 in the script. Use of let in GHCI is optional.
+
+-----Operator Basics
+5. There is no operator for "%". Instead Haskell has the operator `rem`.
+6. != is represented as /=.
+
+-----Function Basics
+7. Function calls can be represented as (func param1 param2 ....)
+8. Functions in a script can be defined in any order.
+9. Functions and variables can have a quote (') in their name. By convention, Functions
+   with ' at the end signify strict (as opposed to lazy evaluation) enabled.
+
+-----If statements
+10. Unlike other imperative programs, if statements are expressions than a depiction of control
+    flow. Therefore an if statement must always have a then and an else.
+
+-----Lists
+11. Lists in Haskell must be homogeneous i.e. of the same type.
+12. In Haskell strings like "yolo" are represented as ['y','o','l','o'].
+13. List concatenation is done using the '++' operator.
+14. An entry can be expressed as being a result of pre-fixing it using the : operator. E.g. t = 32:[1,2,3].
+    This defines t as [32,1,2,3].
+15. Elements of the list can be accessed using the !! operator. e.g. t !! 3. Unlike python -ve indices are not allowed.
+16. Haskell indices are 0 based.
+17. Lists within lists cannot be of different types but can be of different lengths.
+18. Haskell defines some built in functions for elements of head.
+      Let the list be defined (not created) as t = [1,2,3,4,5]
+      Then :
+         head t implies and evaluates to (not returns) 1
+         tail t implies [2,3,4,5]
+         init t implies [1,2,3,4]
+         last t implies 5
+         length t evaluates to 5
+         reverese t evaluates to [5,4,3,2,1]
+         null t evalautes to True if list is empty, False otherwise.
+         take n t represents the first n (or less elements) of the list.
+         drop n t is the opposite of take.
+         minimum t and maximum t represent minimum and maximum elements respectively.
+         product t and sum t represent the product and sum of elements in t respectively.
+         head, tail, init, last throw exceptions when used on an empty list. 
+         k `elem` t is used to express if element k is in list t.
+19. In Haskell lists (like the variables) are defined and not created. This is apparent in an expression like
+    t = [1,2,3] followed by t = 1:t. Unlike python where this would (with some changes) represent an element being
+    inserted into a list, GHCI would simply evaluate the expression ad-infinitum as the definition of t is not recursive
+    and unbounded. This behavior is not unlike what is observed in Prolog**.
+
+
+
