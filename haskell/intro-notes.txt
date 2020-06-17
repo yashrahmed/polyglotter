@@ -1,4 +1,4 @@
-HASKELL NOTES - 
+HASKELL NOTES from http://learnyouahaskell.com/
 
 Using "stack" manager to install and manage haskell installations.
 
@@ -6,11 +6,12 @@ Please note that these notes sometimes use terminology from imperative programmi
 This may lead to mis-representation of the concepts metioned herein. An effort has been
 made to stick as close to functional programming paralance as possible.
 
-Chapter 01 ---
+
+Chapter 01: Starting out ---
 
 -----Basics
-1. Negative numbers are cannot simply be used in arithmetic operations e.g. 5 * -2. Instead () need to be used in haskell expressions. This 
-   is because the interpreter gets confused b/w infix and prefix notation.
+1. Negative numbers are cannot simply be used in arithmetic operations e.g. 5 * -2. 
+   Instead () need to be used in haskell expressions. This is because the interpreter gets confused b/w infix and prefix notation.
 3. Expressions like 99 > 100 == True are problematic for the same reason. Correct way to use it is (99 > 100) == True.
 3. Haskell is strongly typed.
 4. Characters literals are written using '' and String using "".
@@ -40,6 +41,8 @@ Chapter 01 ---
 15. Elements of the list can be accessed using the !! operator. e.g. t !! 3. Unlike python -ve indices are not allowed.
 16. Haskell indices are 0 based.
 17. Lists within lists cannot be of different types but can be of different lengths.
+
+-----Built in function for Lists.
 18. Haskell defines some built in functions for elements of head.
       Let the list be defined (not created) as t = [1,2,3,4,5]
       Then :
@@ -61,5 +64,39 @@ Chapter 01 ---
     inserted into a list, GHCI would simply evaluate the expression ad-infinitum as the definition of t is not recursive
     and unbounded. This behavior is not unlike what is observed in Prolog**.
 
+-----Ranges
+20. Haskell includes support for finite and infinite lists generated using ranges.
+    [1..10] - Represents (and evaluates) to a list of 10 elements from 1 to 10 (inclusive).
+    [1,2..10] - Represents interval [1,10] with step size of 1. The second element before .. is used to compute step size.
+    [20,19..1] - Reverse lists require intermediary number to be specified. [20..1] evaluates to an empty list[].
+    [1..] and [1,2..] represent infinite sequences. Haskell evaluates them lazily for e.g. the expression take 3 [1..] evaluates to [1,2,3].
+    functions like cycle and repeat can represent infinite lists.
+    replicate x k represents a list [x,x....k times].
+21. Ranges also work with characters. Unicode characters produce some odd results for e.g.
+    ['α'..'π'] evaluates to "\945\946\947\948\949\950\951\952\953\954\955\956\957\958\959\960".
 
+
+-----List comprehensions
+22. List comprehensions in Haskell are written using the following general expression
+    [f(x) | x <- Domain, p1(x), p2(x),....pn(x)]
+    where
+      f is a function of x used to evaluate the output value.
+      Domain is a list of values from which we can draw sample values for x.
+      p1, p2,...pn are predicates which evaluate to True or False for a given value of x. ALL predicates must evaluate to True for x to be retained.
+    Multiple variables are also allowed in Haskell similar to python. For e.g.
+    [x + y | x <- [1..10], y <-[11..20], even x, odd y]
+
+-----Tuples
+23. Tuples work in a way similar to python. They have a finite number of values and can have values
+    of different types e.g. ('Pizza Hut', 'Pepperoni', 10.99) is a valid tuple in Haskell. Haskell also considers a tuple
+    as its own type. For e.g. (1,2) and (1,2,3) are tuples of different 'types', therefore a list [(1,2),(1,2,3)] cannot
+    be represnted is Haskell.
+24. Haskell has two built in functions for tuples.
+    fst -- represents first value
+    snd -- represents second value
+    These methods only work on doubles.
+25. Singleton tuples are not allowed in Haskell. They are evaluated as an independent non-tuple value.
+26. The zip function represents a list which contains tuples of corresponding elements of 2 lists. Unlike python zip does not evaluate for more than 2 lists.
+
+Chapter 2: Types and Typeclasses ---
 
