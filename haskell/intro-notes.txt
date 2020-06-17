@@ -84,7 +84,7 @@ Chapter 01: Starting out ---
       Domain is a list of values from which we can draw sample values for x.
       p1, p2,...pn are predicates which evaluate to True or False for a given value of x. ALL predicates must evaluate to True for x to be retained.
     Multiple variables are also allowed in Haskell similar to python. For e.g.
-    [x + y | x <- [1..10], y <-[11..20], even x, odd y]
+    [x + y | x <- [1..10], y <-[11..20], even x, odd y]. Like python '_' can be used to ignore the variables.
 
 -----Tuples
 23. Tuples work in a way similar to python. They have a finite number of values and can have values
