@@ -29,8 +29,7 @@ Chapter 01: Starting out ---
    with ' at the end signify strict (as opposed to lazy evaluation) enabled.
 
 -----If statements
-10. Unlike other imperative programs, if statements are expressions than a depiction of control
-    flow. Therefore an if statement must always have a then and an else.
+10. Unlike other imperative programs, if statements are expressions than a depiction of control flow. Therefore an if statement must always have a then and an else.
 
 -----Lists
 11. Lists in Haskell must be homogeneous i.e. of the same type.
@@ -60,9 +59,7 @@ Chapter 01: Starting out ---
          head, tail, init, last throw exceptions when used on an empty list. 
          k `elem` t is used to express if element k is in list t.
 19. In Haskell lists (like the variables) are defined and not created. This is apparent in an expression like
-    t = [1,2,3] followed by t = 1:t. Unlike python where this would (with some changes) represent an element being
-    inserted into a list, GHCI would simply evaluate the expression ad-infinitum as the definition of t is not recursive
-    and unbounded. This behavior is not unlike what is observed in Prolog**.
+    t = [1,2,3] followed by t = 1:t. Unlike python where this would (with some changes) represent an element being inserted into a list, GHCI would simply evaluate the expression ad-infinitum as the definition of t is recursiveand unbounded. This behavior is not unlike what is observed in Prolog**.
 
 -----Ranges
 20. Haskell includes support for finite and infinite lists generated using ranges.
@@ -87,10 +84,7 @@ Chapter 01: Starting out ---
     [x + y | x <- [1..10], y <-[11..20], even x, odd y]. Like python '_' can be used to ignore the variables.
 
 -----Tuples
-23. Tuples work in a way similar to python. They have a finite number of values and can have values
-    of different types e.g. ('Pizza Hut', 'Pepperoni', 10.99) is a valid tuple in Haskell. Haskell also considers a tuple
-    as its own type. For e.g. (1,2) and (1,2,3) are tuples of different 'types', therefore a list [(1,2),(1,2,3)] cannot
-    be represnted is Haskell.
+23. Tuples work in a way similar to python. They have a finite number of values and can have values of different types e.g. ('Pizza Hut', 'Pepperoni', 10.99) is a valid tuple in Haskell. Haskell also considers a tuple as its own type. For e.g. (1,2) and (1,2,3) are tuples of different 'types', therefore a list [(1,2),(1,2,3)] cannot be represented is Haskell.
 24. Haskell has two built in functions for tuples.
     fst -- represents first value
     snd -- represents second value
@@ -101,7 +95,7 @@ Chapter 01: Starting out ---
 Chapter 2: Types and Typeclasses ---
 
 27. Haskell has a built in type-inference mechanism.
-28. :t x represents the datatype of the value x. For e.g. :t 24 evaluates to 24 :: Num p => p. The symbol '=>' represents a class constaint. And the symbol '::' is read as 'has type of'. 
+28. :t x represents the datatype of the value x. For e.g. :t 24 evaluates to 24 :: Num p => p. The symbol '=>' represents a class constraint. And the symbol '::' is read as 'has type of'. 
 29. Explicit types in Haskell are represented by keywords with an uppercase first letter.
 27. Strings are of type [Char].
 28. Haskell (like Java 8 and above) also assigns type to functions. For e.g. :t cycle evaluates to [a] -> [a] i.e. it takes a list and returns a list. For functions with multiple arguments e.g. :t double_min which takes rwo arguments, Haskell evaluates the expression as double_min :: (Num a, Ord a) => a -> a -> a. There is no distinction made between the arguments and the return type. The last value is the return type.
@@ -115,15 +109,19 @@ Chapter 2: Types and Typeclasses ---
 30. :t min evaluates to "min :: Ord a => a -> a -> a". In this result, 'a' is a Type variable (similar to Generics in Java) with a constraint that a be any type that is either Ord or its sub type.
 
 -----Typeclasses
-31. In Haskell all operators are functions. Any function with only special characters is considered an infix operator. The 'operator' function must be wrapped within '()' to be used as a prefix (as is the case for regular functions) or when passed as arguments to other functions. For e.g. 2 + 3 and (+) 2 3 both evaluate to 5.
+31. In Haskell all operators are functions. Any function with only special characters is considered an infix operator. The operator function must be wrapped within '()' to be used as a prefix (as is the case for regular functions) or when passed as arguments to other functions. For e.g. 2 + 3 and (+) 2 3 both evaluate to 5.
 32. Also functions with 'normal' names can be used in infix forms using ``. For e.g. 2 `double_min` 3 and double_min 2 3 both evaluate to 4.
 32. Operators like '==', '/=', '+', '-' etc are all functions. Expresson :t (+) evaluates to min :: Ord a => a -> a -> a.
 33. Haskell Typeclasses are similar to Java interfaces that represent a certain type of behavior. Common typeclasses are described below -
     a. Eq - All subclasses of Eq must implement '=' and '/=' functions.
     b. Ord - Represents types that define partial or full order. It contains functions like >=, <=, > and <. Ord is a sub typeclass of Eq
     c. Show - Represent all typeclasses that can be represented as strings.
-    d. Read - All classes that can be parsed from a string. The type constraint must be inferrable from the expression. For e.g. read "4" results in a parse failures since that could be interpreted as multiple ambiguous types. It could be an Int or a Char. An expression like read "3" + 4 is valid as Haskell can infer the type. In order to represent a specific type the '::' symbol can be used. For e.g. read "3" :: Int evaluates to 3 while read "3" :: Float evalautes to 3.0. Note that '::' is NOT an operator. It is a 'keyword' used to represent the type.
+    d. Read - All classes that can be parsed from a string. The type constraint must be inferrable from the expression. For e.g. read "4" results in a parse failures since that could be interpreted as multiple ambiguous types. It could be an Int or a Char. An expression like read "3" + 4 is valid as Haskell can infer the type. 
+    
+    In order to represent a specific type the '::' symbol can be used. For e.g. read "3" :: Int evaluates to 3 while read "3" :: Float evalautes to 3.0. Note that '::' is NOT an operator. It is a 'keyword' used to represent the type.
+    
     e. Enum - Typeclasses whose instances can be completely ordered. Some of the subclasses are Bool, Char, Int, Integer, Float, Double.
     f. Bounded - Typeclasses having an upper and a lower bound. minBound and maxBound methods can be used to check the bounds of any subclasses of Bounded. e.g. minBound :: Int yields -9223372036854775808. The sub-expression ':: Int' is also used to pass in type-variable arguments (Not sure about the mechanism!!!!1).
     g. Num - Represents numeric typeclasses like the one mentioned above. Some other special subclasses of Num are Integral (which provides whole number division and remainder operation support) and Floating (which encompasses Float and Double).
+34. The typeclasses in Prelude 'implement' multiple typeclasses.
 
