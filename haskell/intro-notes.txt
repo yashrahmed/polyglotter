@@ -92,7 +92,7 @@ Chapter 01: Starting out ---
 25. Singleton tuples are not allowed in Haskell. They are evaluated as an independent non-tuple value.
 26. The zip function represents a list which contains tuples of corresponding elements of 2 lists. Unlike python zip does not evaluate for more than 2 lists.
 
-Chapter 2: Types and Typeclasses ---
+Chapter 02: Types and Typeclasses ---
 
 27. Haskell has a built in type-inference mechanism.
 28. :t x represents the datatype of the value x. For e.g. :t 24 evaluates to 24 :: Num p => p. The symbol '=>' represents a class constraint. And the symbol '::' is read as 'has type of'. 
@@ -124,4 +124,50 @@ Chapter 2: Types and Typeclasses ---
     f. Bounded - Typeclasses having an upper and a lower bound. minBound and maxBound methods can be used to check the bounds of any subclasses of Bounded. e.g. minBound :: Int yields -9223372036854775808. The sub-expression ':: Int' is also used to pass in type-variable arguments (Not sure about the mechanism!!!!1).
     g. Num - Represents numeric typeclasses like the one mentioned above. Some other special subclasses of Num are Integral (which provides whole number division and remainder operation support) and Floating (which encompasses Float and Double).
 34. The typeclasses in Prelude 'implement' multiple typeclasses.
+
+
+Chapter 03: Syntax in Functions
+
+-----Pattern Matching
+
+35. The fibonacci implementation in Haskell is as follows
+    fib :: Integer a => a -> a
+    fib 0 = 0
+    fib 1 = 1
+    fib n = fib (n - 1) + fib (n - 2)
+
+    This looks similar to a fibonacci definition in Prolog (or even on Paper). Haskell is able to successfully interpret the function defintion using pattern matching. In a manner of speaking, Haskell scans the different 'sub-definitions' and applies the correct one when evaluating the function. Note that the type constraint mentioned above MUST be a typeclass and NOT a typeinstance like Int or Float.
+36. Pattern matching scan works from top to bottom. The ordering of the rules IS important. For e.g. the code below is a valid factorial implementation.
+    fact :: Integral a => a -> a
+    fact 0 = 1
+    fact n = n * fact(n-1)
+
+    However, If the order of the rules were reversed, then the evaluation would never terminate. This is one of the few ways in which defining a function in Haskell is different from simply writing in on paper.
+
+37. If a pattern match cannot be found, then an exception is thrown. It is recommended to have a catchall case at the end.
+
+38. Pattern matching can be used with tuples like in the example below - 
+    third :: (a, b, c) -> c
+    third (_, _, z) = z
+
+    and also with arrays
+
+    header :: [a] -> a
+    header [] = error "failed"
+    header (x:_) = x
+
+    Binding multiple variables requires enclosing the expression in ().
+
+    In case, we need the reference to the original list the @ can be used in the pattern for e.g.
+
+    header :: [a] -> a
+    header [] = error "failed"
+    header l@(x:_) = x -- l can now be used as is.
+39 '++' operator cannot be used in patterns.
+
+-----Guards
+
+
+
+
 
