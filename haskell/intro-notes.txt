@@ -165,9 +165,48 @@ Chapter 03: Syntax in Functions
     header l@(x:_) = x -- l can now be used as is.
 39 '++' operator cannot be used in patterns.
 
------Guards
+-----Guards and where / let variable binding
+40. Guard operators are similar to switch cases in other languages. They are written using the '|' character. Guards are evalauted in a manner similar to patterns i.e. from top to bottom. The first match is used.
 
+An example of fizz buzz using guards look like --
+fizz_buzz :: (Integral a) => a -> String
+fizz_buzz x
+    | x `rem` 15 == 0 = "Fizz Buzz"
+    | x `rem` 3 == 0 = "Fizz"
+    | x `rem` 5 == 0 = "Buzz"
+    | otherwise = ""
 
+'otherwise' acts as a catchall statement
 
+41. Guard operations can get complicated to write (and could lead to repeated evaluations of the same expressions). The 'where' keyword allows variables to be defined and bound to names at the end of a guard expression. This can be used to simplify the guard checks and to prevent repeated evaluations of the same expressions
 
+An example of fizz buzz written using guard clauses with where binding.
+-- fizz buzz written using guards and where binding
+fizz_buzz :: Integral(a) => a -> String
+fizz_buzz x
+    | is_div3 && is_div5 = "FizzBuzz"
+    | is_div5  = "Buzz"
+    | is_div3  = "Fizz"
+    | otherwise       = ""
+    where is_div3 = (x `rem` 3 == 0)
+          is_div5 = (x `rem` 5 == 0)
 
+42. Where can be used with pattern matching.
+
+43. Let bindings are similar to where bindings except that let can be used in any part of the expression. Note that let cannot be to bind variables in guards in a manner similar to where (Though let can be used with case statements).
+
+e.g. of a let binding in use 
+z  = let x = 2; y = 4; in x*x + y*y\
+-- z evaluates to 20.
+
+44. The let bindings are expression themselves (i.e. they can be crammed anywhere like if-else) while 'where' is a syntactic construct that can only be used inside functions.
+
+----Case expressions
+45. Similar to case statements in Java. But case in Haskell is an expression and can be embedded anywhere.
+The syntax to use them is as follows --
+case x of pattern1 -> result1
+          pattern2 -> result2
+          .....  
+If the case falls though all the way, then an exception is thrown.
+
+47. How does GHC's pattern matcher work?

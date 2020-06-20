@@ -20,3 +20,33 @@ third (_, _, z) = z
 header :: [a] -> a
 header [] = error "failed"
 header (x:_) = x
+
+-- even odd div3 written using only guards.
+is_even_odd_div3_v1 :: Integral(a) => a -> String
+is_even_odd_div3_v1 x
+    | (x `rem` 2 ==0) && (x `rem` 3 ==0) = "even div3"
+    | (x `rem` 2 ==0) && (x `rem` 3 /=0) = "even not-div3"
+    | (x `rem` 2 /=0) && (x `rem` 3 ==0) = "odd div3" 
+    | (x `rem` 2 /=0) && (x `rem` 3 /=0) = "odd not-div3"
+    | otherwise                          = "Unknown"
+
+-- even odd written div3 using guards and where binding
+is_even_odd_div3_v2 :: Integral(a) =>  a -> String
+is_even_odd_div3_v2 x
+    | is_even && is_div3     = "even div3"
+    | is_even && not is_div3 = "even not-div3"
+    | not is_even && is_div3 = "odd div3"
+    | not is_even && not is_div3 = "odd not-div3"
+    | otherwise                   = " Unknown"
+    where is_even = (x `rem` 2 == 0)
+          is_div3 = (x `rem` 3 == 0)
+
+
+-- fizz buzz written using guards and where binding
+-- fizz_buzz :: Integral(a) => a -> String
+-- fizz_buzz x = 
+--     | let is_div3 = (x `rem` 3 == 0); is_div5 = (x `rem` 5 == 0);
+--     | is_div3 && is_div5 = "FizzBuzz"
+--     | is_div5  = "Buzz"
+--     | is_div3  = "Fizz"
+--     | otherwise       = ""
