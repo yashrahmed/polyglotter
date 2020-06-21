@@ -41,6 +41,22 @@ is_even_odd_div3_v2 x
     where is_even = (x `rem` 2 == 0)
           is_div3 = (x `rem` 3 == 0)
 
+max_value :: (Ord a) => [a] -> a
+max_value x = case x of
+                    [] -> error "No max value in an empty list"
+                    [a] -> a
+                    (h:rest) -> max h (max_value rest)
+
+
+bubble :: (Ord a) => [a] -> [a]
+bubble x = case x of
+    [] -> []
+    [a] -> [a]
+    (a:b:xs) -> if a > b then b:(bubble (a:xs)) else a:(bubble (b:xs))
+
+-- max_value []  = 
+-- max_value [x] = x
+-- max_value (h:rest) = max h (max_value rest)
 
 -- fizz buzz written using guards and where binding
 -- fizz_buzz :: Integral(a) => a -> String

@@ -1,6 +1,6 @@
 HASKELL NOTES from http://learnyouahaskell.com/
 
-Using "stack" manager to install and manage haskell installations.
+Using "stack" manager to install and manage Haskell installations.
 
 Please note that these notes sometimes use terminology from imperative programming.
 This may lead to mis-representation of the concepts metioned herein. An effort has been
@@ -11,7 +11,7 @@ Chapter 01: Starting out ---
 
 -----Basics
 1. Negative numbers are cannot simply be used in arithmetic operations e.g. 5 * -2. 
-   Instead () need to be used in haskell expressions. This is because the interpreter gets confused b/w infix and prefix notation.
+   Instead () need to be used in Haskell expressions. This is because the interpreter gets confused b/w infix and prefix notation.
 3. Expressions like 99 > 100 == True are problematic for the same reason. Correct way to use it is (99 > 100) == True.
 3. Haskell is strongly typed.
 4. Characters literals are written using '' and String using "".
@@ -191,7 +191,7 @@ fizz_buzz x
     where is_div3 = (x `rem` 3 == 0)
           is_div5 = (x `rem` 5 == 0)
 
-42. Where can be used with pattern matching.
+42. Guards do not support pattern matching. Guard condition must evaluate to a Bool. 'Where' however, can be used with pattern matching when defining a variable.
 
 43. Let bindings are similar to where bindings except that let can be used in any part of the expression. Note that let cannot be to bind variables in guards in a manner similar to where (Though let can be used with case statements).
 
@@ -209,4 +209,22 @@ case x of pattern1 -> result1
           .....  
 If the case falls though all the way, then an exception is thrown.
 
+46. Case classes support full pattern matching unlike guards.
+
 47. How does GHC's pattern matcher work?
+    Also check out Haskell's multi if.
+
+
+Chapter 04: Recursion ----
+
+48. Due to the declarative nature of Haskell, operations that are traditionally iterative must be defined recursively. Example of a function that gets the maximum value.
+
+max_value :: (Ord a) => [a] -> a
+max_value x = case x of
+                    [] -> error "No max value in an empty list"
+                    [a] -> a
+                    (h:rest) -> max h (max_value rest)
+
+49. Because Haskell supports infinte lists, reursive functions do not necessarily have to have a termination clause, but it is DEFINITELY recommended.
+
+Chapter 05: Higher Order functions ----
