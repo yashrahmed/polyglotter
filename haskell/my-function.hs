@@ -54,15 +54,10 @@ bubble x = case x of
     [a] -> [a]
     (a:b:xs) -> if a > b then b:(bubble (a:xs)) else a:(bubble (b:xs))
 
--- max_value []  = 
--- max_value [x] = x
--- max_value (h:rest) = max h (max_value rest)
+max_2 :: (Ord a) => a -> a -> a
+max_2 x y
+    | x > y     = x
+    | otherwise = y
 
--- fizz buzz written using guards and where binding
--- fizz_buzz :: Integral(a) => a -> String
--- fizz_buzz x = 
---     | let is_div3 = (x `rem` 3 == 0); is_div5 = (x `rem` 5 == 0);
---     | is_div3 && is_div5 = "FizzBuzz"
---     | is_div5  = "Buzz"
---     | is_div3  = "Fizz"
---     | otherwise       = ""
+apply_then_double :: (Num a) => (a -> a) -> a -> a
+apply_then_double f x = (*) 2 (f x)

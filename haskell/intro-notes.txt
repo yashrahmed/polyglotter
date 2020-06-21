@@ -59,7 +59,7 @@ Chapter 01: Starting out ---
          head, tail, init, last throw exceptions when used on an empty list. 
          k `elem` t is used to express if element k is in list t.
 19. In Haskell lists (like the variables) are defined and not created. This is apparent in an expression like
-    t = [1,2,3] followed by t = 1:t. Unlike python where this would (with some changes) represent an element being inserted into a list, GHCI would simply evaluate the expression ad-infinitum as the definition of t is recursiveand unbounded. This behavior is not unlike what is observed in Prolog**.
+    t = [1,2,3] followed by t = 1:t. Unlike python where this would (with some changes) represent an element being inserted into a list, GHCI would simply evaluate the expression ad-infinitum as the definition of t is recursive and unbounded. This behavior is not unlike what is observed in Prolog**.
 
 -----Ranges
 20. Haskell includes support for finite and infinite lists generated using ranges.
@@ -228,3 +228,93 @@ max_value x = case x of
 49. Because Haskell supports infinte lists, reursive functions do not necessarily have to have a termination clause, but it is DEFINITELY recommended.
 
 Chapter 05: Higher Order functions ----
+
+---- Curried Functions
+
+50. In Haskell, ALL functions are curried i.e. they are partially applicable. This is only relevant during evaluation and not definition. But knowing this feature combined with support for first class functions allows the expression of complex concepts easily. Curried functions always take a single argument. For example the max function is used as follows - 
+    max 2 3 --evalautes to 3
+However, it can also be used with partial application as follows
+    t = max 2
+    t 3 -- evaluates to 3
+This is equivalent to doing (max 2) 3, where t represents (max 2) which is a partially applied function. Note that no special definition had to be used to allow this behavior. Haskell offers this out of the box. That is the reason why functions having multiple arguments have a type definition with -> for e.g. max :: (Ord a) => a -> a -> a instead of something like a,a -> a. The use of arrows instead of the ',' indicates partial applicability. This notation can also be used in lambda expressions. For instance -
+    t = \x y -> x + y  -- is the same as 
+    t = \x -> \y -> x + y
+
+51. Haskell also had a special rule for parital applicability with infix functions using "sections". For e.g. the '/' operation can be used in the 'prefix' mode as '(/) 20 10' (evaluate to 2). Currying can be used like with other functions as shown below --
+    t = (/) 20
+    t 10 -- evaluates to 2
+However, the special rule is applied when the operator is curried as follows
+    t = (/ 20)
+    t 10 -- evaluates to 0.5 instead of 2.0
+Under the hood, Haskell creates a paritally applied function of the form _ / 20 and upon application, places the argument in the 'missing position'. This position inference works for all binary function. See examples below --
+    t = (20 /)
+    t 10 -- evaluates to 2
+    y =(2 max)
+    y 3 -- evaluates to 3
+
+52. There is a single exception in Haskell when using sections. An expression like (- 4) would represent a partial function that would subtract 4 from a given number, but it instead refers to the value -4. To use sectioning with subtraction, use the subtract keyword for e.g. t = (subtract 4).
+
+---- Functions as values
+
+53. Haskell allows functions to be passed in as parameters. Here is an example
+    apply_then_double :: (Num a) => (a -> a) -> a -> a
+    apply_then_double f x = (*) 2 (f x)
+    This function is used as shown below
+        apply_then_double (\x -> x + 3) 2 -- evaluates to 10
+
+54. Lambdas in Haskell are written as t = \arg1 arg2 .. argn -> expr(arg1, arg2,....arg n).
+
+55. Similarly, functions can be returned by other functions e.g.
+    incr x  = \p -> x + p -- returns a function
+    t = incr 3
+    t 5 -- evaluates to 8
+    Incorrect naming can lead to anonymous behavior.
+    incr x = \x -> x + 1 -- \x overwrites the previous value of x that is passed in and makes x a variable of the lambda as opposed to substituting the value.
+    t = incr 3
+    t 5 -- evaluates to 6 instead of 4
+
+---- Maps, filters and other applicators.
+
+56. "map" takes a function and a list of inputs and returns a list of values that are the result of applying the function on every input. For e.g.
+    map (+1) [1,2,3,4] -- evaluates to [2,3,4,5]
+The results of maps may also be partially applied functions. For e.g.
+    map (*) [1,2,3] -- evaluates to an array of partially applied multiplication operators.
+
+57. "filter" takes a function that evaluates to a Bool (called a Predicate) and a list. It then returns a list of values in the input list that satsify the predicate. For e.g.
+    filter (\x->(x `rem` 2) == 0) [1..10] -- evaluates to a list of even numbers.
+
+58. "takeWhile" works in a manner similar to filter in that it takes an predicate and a list as arguments. However, unlike "filter" it stops as soon as it finds a value that fails the predicate. "takeWhile" scans the list from left to right.
+    filter (\x->(x `rem` 2) == 0) [1..10] -- evaluates to an empty list as 1 fails the predicate.
+
+---- Lambdas
+
+59. See #54.
+
+---- Folding (Reduce) functions
+
+60. Folding functions take 3 arguments namely a binary function F, an accumulator A and a list of values (x:xs). The fold function that evaluates F A x repeatedly on all values in the list. For e.g. foldl reduces the array from the left.
+    foldl (+) 0 [1,2,3,4] -- evaluates to 10. (+) is the binary function, 0 the acc value and [1,2,3,4] the input list.
+
+61. foldl and foldr start reducing the list from the left and right respectively.
+    -- Example (inefficient !!) implementation of bubble sort using Folding
+    foldl (\a x -> bubble a) [1,4,13,2] [1..4]
+
+62. foldl1 and foldr1 are similar to foldl and foldr respectively, but they assume the first and last element as the accumulator value recursively.
+
+63. scanl and scanl perform the reduction operation, but instead also report intermediate states. The result is the last element of the list(or first in case of scanr). For e.g.
+    scanl (+) 0 [1,2,3,4] -- evaluates to [0,1,3,6,10]
+    scanr (+) 0 [1,2,3,4] -- evaluates to [10,9,7,4,0]
+
+---- Function application with $
+
+64. f $ x is the same as writing f x (f is a function). However $ has the lowest precedence and is right asscociative. So sqrt 4 + 4 evalautes to 6 while sqrt $ 4 + 4 evalautes to 2.828.
+
+---- Function composition
+
+65. Haskell allows function composition using the '.' operator. For e.g.
+    fn x = ceiling (negate (tan (cos (max 50 x))))  -- can be written as
+    fn = ceiling . negate . tan . cos . max 50.
+The function types MUST be compatible during composition. 
+
+
+Chapter 06: Modules ---
