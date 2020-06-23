@@ -318,3 +318,36 @@ The function types MUST be compatible during composition.
 
 
 Chapter 06: Modules ---
+
+66.Modules in Haskell (like Java/Python) is a collection of related functions, typeclasses and types.
+
+67. To import module use import keyword. For e.g. import Data.List. To import specific entities from modules. import Data.List (sort).
+
+68. Prelude is the standard module that is imported by default.
+
+69. GHCI offers a shorthand to import modules. 
+    :m + module1 module2 ....
+
+70. Haskell allows qualified imports like Java/Python.
+    import qualified Data.Map
+    Now, when using the Map module's filter the function name must be fully qualified as "Data.Map.filter". Alternatively, a shorthand can be specified.
+    import qualified Data.Map as m
+
+71. Any module imported by the custom module is automatically available.
+
+72. To write custom modules the following syntax is used.
+    module moudle_name (
+        entity1, ... entityn
+    ) where
+    ....entity definitions
+
+73. Modules can be made hierarchical using #71. Create custom submodules and then use qualified imports for each of them in the parent module. For e.g.
+    -- parent.HS
+    import qualified Child1 as C1
+    import qualified Child2 as C2
+    ....
+
+    -- C1, C2 and other imported modules will automatically be available when the parent module is imported.
+
+74. GHC requires a naming convention to be followed. When importing a module named Areas.Circle for e.g. the file path must be "./Areas/Circle.hs". GHC is going to search for this file in its classpath equivalent (Where is it configured???)
+
