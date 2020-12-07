@@ -1,3 +1,3 @@
 # polyglotter
 
-Notes about functional and Logic programming.
+Test projects in different programming languages
