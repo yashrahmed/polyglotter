@@ -7,7 +7,7 @@ func doublePtr(x *int) { // x if of type int pointer.
 	*x *= 2 // *x dereferences a pointer. i.e. value at address held in x
 }
 
-func swap(x *int, y *int) {
+func swap(x, y *int) { // function args can be written in this shorthand manner if they have the same type.
 	t := *x
 	*x = *y
 	*y = t
