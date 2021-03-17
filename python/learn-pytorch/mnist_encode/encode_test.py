@@ -71,13 +71,10 @@ def encode_as_struct_elems(image):
 
     row_conv = cv2.filter2D(tmp_img, -1, mask_row, anchor=anchor_pos)
     col_conv = cv2.filter2D(tmp_img, -1, mask_col, anchor=anchor_pos)
-    ones_conv = cv2.filter2D(tmp_img, -1, mask_ones, anchor=anchor_pos)
-    ones_conv_mask = ones_conv >= (elem_mass_threshold * elem_size * elem_size)
+    ones_conv = cv2.filter2D(tmp_img, -1, mask_ones, anchor=anchor_pos).astype(np.float64) + 1e-6
 
-    ones_conv_zero_avoid = np.where(ones_conv > 0, ones_conv, 1)
-
-    result_img_row = np.multiply(np.divide(row_conv, ones_conv_zero_avoid), ones_conv_mask)
-    result_img_col = np.multiply(np.divide(col_conv, ones_conv_zero_avoid), ones_conv_mask)
+    result_img_row = np.divide(row_conv, ones_conv)
+    result_img_col = np.divide(col_conv, ones_conv)
     result_cg = np.stack([result_img_row, result_img_col], axis=2)
 
     # @todo - return result_cg_dist ?
