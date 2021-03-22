@@ -58,7 +58,7 @@ def encode_as_struct_elems(image):
     min_pool_window_size = [20, 20]
 
     # structural element params
-    elem_size = 40  # only a single value required to describe a square shaped structural element
+    elem_size = 30  # only a single value required to describe a square shaped structural element
     elem_cg_dist_threshold = 4  # max dist of the CG of the structural element from its center
     elem_mass_threshold = 0.1  # min required active fraction of the mass within the structural element
 
