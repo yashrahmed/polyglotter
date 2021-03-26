@@ -54,8 +54,6 @@ def encode_as_struct_elems(image):
     """
     # encoding params
     anchor_pos = (-1, -1)
-    min_pool_overlap = 5
-    min_pool_window_size = [20, 20]
 
     # structural element params
     elem_size = 30  # only a single value required to describe a square shaped structural element
@@ -77,36 +75,42 @@ def encode_as_struct_elems(image):
     result_img_col = np.divide(col_conv, ones_conv)
     result_cg = np.stack([result_img_row, result_img_col], axis=2)
 
-    # @todo - return result_cg_dist ?
     result_cg_dist = np.sqrt(np.sum(np.power(result_cg - (elem_size / 2), 2), axis=2))
-    result_cg_dist = strided_min_pool_sim(result_cg_dist, min_pool_window_size, min_pool_overlap)
-    # construct output image
-    result_cg_thresh_dist_mask = result_cg_dist <= elem_cg_dist_threshold
-    min_cg_dist = np.min(result_cg_dist)
-    max_cg_dist = np.max(result_cg_dist)
-    result_cg_dist_img = 1 - (result_cg_dist * (1 / (max_cg_dist - min_cg_dist)))
-    result_cg_dist_img = np.multiply(result_cg_dist_img, result_cg_thresh_dist_mask)
-
-    return np.array(result_cg_dist_img * 255, dtype=np.uint8)
+    result_cg_thresh_dist_mask = result_cg_dist <= elem_cg_dist_threshold  # get mask before calculating complement.
+    result_cg_dist = 1 - scale_to_unit(result_cg_dist)  # Sub from 1 to get CG distance complement.
+    return np.multiply(result_cg_dist, result_cg_thresh_dist_mask)
 
 
-def strided_min_pool_sim(image, window_size, overlap):
+def strided_avg_pool_with_threshold(image, window_size, stride, threshold=0.0):
     h_img, w_img = image.shape
-    hw, ww = window_size
-    h_stride = hw - overlap
-    w_stride = ww - overlap
-    min_pool_result = []
+    h_win, w_win = window_size
+    h_stride = stride
+    v_stride = stride  # assume stride is the same for both x and y
+    pool_result = []
     for i in range(0, h_img, h_stride):
         row_result = []
-        min_pool_result.append(row_result)
-        for j in range(0, w_img, w_stride):
-            tmp_img = image[i:min(i + hw, h_img), j:min(j + ww, w_img)]
-            row_result.append(np.min(tmp_img))
-    return np.array(min_pool_result)
+        pool_result.append(row_result)
+        for j in range(0, w_img, v_stride):
+            tmp_img = image[i:min(i + h_win, h_img), j:min(j + w_win, w_img)]
+            row_result.append(np.mean(tmp_img))
+    # scale to unit --> threshold --> convert to float mask
+    return (scale_to_unit(np.array(pool_result)) > threshold).astype(np.float64)
+
+
+def scale_to_unit(image):
+    min_gray = np.min(image)
+    max_gray = np.max(image)
+    delta = max_gray - min_gray
+    return (image - min_gray) / (max_gray - min_gray) if delta > 1e-3 else image
+
+
+def post_proc(image):
+    result = np.array(image * 255, dtype=np.uint8)
+    return result
 
 
 if __name__ == '__main__':
-    img = cv2.imread('/home/yashrahmed/Desktop/img_5.png')
+    img = cv2.imread('/home/yashrahmed/Desktop/img_3.png')
     img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     ret, th_img = cv2.threshold(img, 40, 255, cv2.THRESH_BINARY_INV)
     th_img = th_img / 255
@@ -115,9 +119,19 @@ if __name__ == '__main__':
     # cg_scipy(th_img)
     # cg_numpy(th_img, 60, 116)
     result_img = encode_as_struct_elems(th_img)
-    cv2.imshow('win1', th_img * 255)
 
-    cv2.imshow('win4-cg-np-full', cv2.resize(result_img, (200, 200)))
+    pool_threshold = 0.25
+    pooled_1 = strided_avg_pool_with_threshold(result_img, [20, 20], 5, pool_threshold)
+    pooled_2 = strided_avg_pool_with_threshold(result_img, [40, 40], 10, pool_threshold)
+    pooled_3 = strided_avg_pool_with_threshold(result_img, [60, 60], 15, pool_threshold)
+    print(pooled_1.shape)
+    print(pooled_2.shape)
+    print(pooled_3.shape)
+
+    cv2.imshow('win1', th_img * 255)
+    cv2.imshow('pooled-1', cv2.resize(post_proc(pooled_1), (200, 200)))
+    cv2.imshow('pooled-2', cv2.resize(post_proc(pooled_2), (200, 200)))
+    cv2.imshow('pooled-3', cv2.resize(post_proc(pooled_3), (200, 200)))
     cv2.waitKey(0)
 
     """
