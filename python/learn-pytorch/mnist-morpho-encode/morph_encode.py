@@ -22,26 +22,27 @@ def inter_over_union_features(query_feature, match_tgt_feature):
     return result_vector
 
 
-def multi_dilate_and_shrink(input_img):
-    tgt_dim = (50, 50)
-    kernel_dims = [30, 20, 10]
-    kernels = [np.ones(kernel_dims[0]), np.ones(kernel_dims[1]), np.ones(kernel_dims[2])]
+def multi_dilate_and_shrink(kernel_dims, target_dims, input_img):
+    kernels = [np.ones([kd, kd]) for kd in kernel_dims]
     dilation_results = []
     for kernel in kernels:
-        dilation_results.append(cv2.resize(cv2.dilate(input_img, kernel), tgt_dim, interpolation=cv2.INTER_LINEAR))
+        dilation_results.append(cv2.resize(cv2.dilate(input_img, kernel), target_dims, interpolation=cv2.INTER_LINEAR))
     return dilation_results
 
 
-def read_img_and_threshold(img_path):
+def read_img_and_threshold(img_path, threshold_value=40, threshold_type=cv2.THRESH_BINARY_INV):
     img = cv2.imread(img_path)
     img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    _, th_img = cv2.threshold(img, 40, 255, cv2.THRESH_BINARY_INV)
+    _, th_img = cv2.threshold(img, threshold_value, 255, threshold_type)
     return th_img.astype(np.uint8)
 
 
 if __name__ == '__main__':
-    descriptor_of_3 = multi_dilate_and_shrink(read_img_and_threshold('/home/yashrahmed/Desktop/img_3.png'))
-    descriptor_of_5 = multi_dilate_and_shrink(read_img_and_threshold('/home/yashrahmed/Desktop/img_5.png'))
+    kernel_sizes = [30, 20, 10]
+    tgt_dim = (50, 50)
+    path_prefix = '/home/yashrahmed/Desktop'
+    descriptor_of_3 = multi_dilate_and_shrink(kernel_sizes, tgt_dim, read_img_and_threshold(f'{path_prefix}/img_3.png'))
+    descriptor_of_5 = multi_dilate_and_shrink(kernel_sizes, tgt_dim, read_img_and_threshold(f'{path_prefix}/img_5.png'))
 
     result_vector_1 = inter_over_union_features(descriptor_of_5, descriptor_of_3)
     result_vector_2 = inter_over_union_features(descriptor_of_5, descriptor_of_5)
